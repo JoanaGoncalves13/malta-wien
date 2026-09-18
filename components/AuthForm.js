@@ -74,7 +74,9 @@ export default function AuthForm() {
 
       <p className="welcome" key={greetIdx}>{WELCOMES[greetIdx]}</p>
       <h1 className="brand">
-        Malta
+        <div className="auth-top">
+        <LanguageSwitcher />
+      </div>
         <br />
         Wien
       </h1>
