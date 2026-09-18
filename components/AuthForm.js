@@ -1,17 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { useLang } from "@/lib/i18n/LanguageProvider";
+import LanguageSwitcher from "./LanguageSwitcher";
 
-function translate(message = "") {
-  if (message.includes("Invalid login credentials")) return "Email ou password errados.";
-  if (message.includes("already registered")) return "Já existe uma conta com este email.";
-  if (message.includes("at least")) return "A password tem de ter pelo menos 6 caracteres.";
-  if (message.includes("Email not confirmed")) return "Confirma o teu email antes de entrar.";
+function translate(message, t) {
+  if (message?.includes("Invalid login credentials")) return t("auth.errWrong");
+  if (message?.includes("already registered")) return t("auth.errExists");
+  if (message?.includes("at least")) return t("auth.errShort");
+  if (message?.includes("Email not confirmed")) return t("auth.errUnconfirmed");
   return message;
 }
 
+const WELCOMES = [
+  "Welcome", "Bem-vindo", "Bienvenido", "Bienvenue", "Willkommen",
+  "Welkom", "Benvenuto", "Bun venit", "Tervetuloa", "Dobrodošli", "أهلاً",
+];
+
 export default function AuthForm() {
+  const { t } = useLang();
   const [mode, setMode] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,6 +27,14 @@ export default function AuthForm() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
+  const [greetIdx, setGreetIdx] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setGreetIdx((i) => (i + 1) % WELCOMES.length);
+    }, 2000);
+    return () => clearInterval(id);
+  }, []);
 
   const isSignup = mode === "signup";
 
@@ -34,11 +50,11 @@ export default function AuthForm() {
         password,
         options: { data: { display_name: name.trim() } },
       });
-      if (error) setError(translate(error.message));
-      else if (!data.session) setInfo("Conta criada. Confirma o email para entrares.");
+      if (error) setError(translate(error.message, t));
+      else if (!data.session) setInfo(t("auth.created"));
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setError(translate(error.message));
+      if (error) setError(translate(error.message, t));
     }
 
     setBusy(false);
@@ -52,17 +68,22 @@ export default function AuthForm() {
 
   return (
     <main className="auth">
+      <div className="auth-top">
+        <LanguageSwitcher />
+      </div>
+
+      <p className="welcome" key={greetIdx}>{WELCOMES[greetIdx]}</p>
       <h1 className="brand">
         Malta
         <br />
         Wien
       </h1>
-      <p className="lead">Contas divididas sem dramas.</p>
+      <p className="lead">{t("auth.tagline")}</p>
 
       <form className="stack" onSubmit={handleSubmit}>
         {isSignup && (
           <label>
-            Nome
+            {t("auth.name")}
             <input
               required
               maxLength={40}
@@ -73,7 +94,7 @@ export default function AuthForm() {
           </label>
         )}
         <label>
-          Email
+          {t("auth.email")}
           <input
             type="email"
             required
@@ -83,7 +104,7 @@ export default function AuthForm() {
           />
         </label>
         <label>
-          Password
+          {t("auth.password")}
           <input
             type="password"
             required
@@ -98,12 +119,12 @@ export default function AuthForm() {
         {info && <p className="info">{info}</p>}
 
         <button className="btn btn-primary btn-full" disabled={busy}>
-          {isSignup ? "Criar conta" : "Entrar"}
+          {isSignup ? t("auth.createAccount") : t("auth.signIn")}
         </button>
       </form>
 
       <button className="link" onClick={switchMode}>
-        {isSignup ? "Já tens conta? Entra" : "Ainda não tens conta? Cria uma"}
+        {isSignup ? t("auth.haveAccount") : t("auth.noAccount")}
       </button>
     </main>
   );

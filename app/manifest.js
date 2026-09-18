@@ -1,7 +1,7 @@
 export default function manifest() {
   return {
-    name: "Erasmus in Vienna",
-    short_name: "Erasmus in Vienna",
+    name: "Let's go to Vienna?",
+    short_name: "Let's go to Vienna?",
     description: "Split bills, track spending and see what's on in Vienna",
     start_url: "/",
     display: "standalone",
