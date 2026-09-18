@@ -5,10 +5,10 @@ import { LanguageProvider } from "@/lib/i18n/LanguageProvider";
 const font = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font" });
 
 export const metadata = {
-  title: "Let's go to Vienna?",
+  title: "play smart",
   description: "Split bills and track spending with your Erasmus crew in Vienna",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, statusBarStyle: "default", title: "Let's go to Vienna?" },
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "play smart" },
 };
 
 export const viewport = {

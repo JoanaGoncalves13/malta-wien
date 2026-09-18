@@ -39,7 +39,7 @@ export default function Header() {
     <>
       <header className="topbar">
         <Link href="/" className="logo">
-          Wien
+          play smart
         </Link>
         <nav className="nav nav-desktop">
           {LINKS.map((l) => (

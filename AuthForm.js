@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useLang } from "@/lib/i18n/LanguageProvider";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 function translate(message, t) {
   if (message?.includes("Invalid login credentials")) return t("auth.errWrong");
@@ -11,6 +12,11 @@ function translate(message, t) {
   if (message?.includes("Email not confirmed")) return t("auth.errUnconfirmed");
   return message;
 }
+
+const WELCOMES = [
+  "Welcome", "Bem-vindo", "Bienvenido", "Bienvenue", "Willkommen",
+  "Welkom", "Benvenuto", "Bun venit", "Tervetuloa", "Dobrodošli", "أهلاً",
+];
 
 export default function AuthForm() {
   const { t } = useLang();
@@ -21,6 +27,14 @@ export default function AuthForm() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
+  const [greetIdx, setGreetIdx] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setGreetIdx((i) => (i + 1) % WELCOMES.length);
+    }, 2000);
+    return () => clearInterval(id);
+  }, []);
 
   const isSignup = mode === "signup";
 
@@ -54,10 +68,15 @@ export default function AuthForm() {
 
   return (
     <main className="auth">
+      <div className="auth-top">
+        <LanguageSwitcher />
+      </div>
+
+      <p className="welcome" key={greetIdx}>{WELCOMES[greetIdx]}</p>
       <h1 className="brand">
-        Malta
+        play
         <br />
-        Wien
+        smart
       </h1>
       <p className="lead">{t("auth.tagline")}</p>
 

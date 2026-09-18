@@ -1,7 +1,7 @@
 export default function manifest() {
   return {
-    name: "Let's go to Vienna?",
-    short_name: "Let's go to Vienna?",
+    name: "play smart",
+    short_name: "play smart",
     description: "Split bills, track spending and see what's on in Vienna",
     start_url: "/",
     display: "standalone",
