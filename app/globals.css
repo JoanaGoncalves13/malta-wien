@@ -277,12 +277,9 @@ input[type="checkbox"] { width: 1.2rem; height: 1.2rem; padding: 0; accent-color
 /* ============ Design de Viena ============ */
 .logo { display: inline-flex; align-items: center; gap: 0.5rem; }
 .logo::before {
-  content: "";
-  width: 1.05rem;
-  height: 1.05rem;
-  border-radius: 4px;
-  background: linear-gradient(180deg, var(--red) 0 50%, #fff 50% 100%);
-  border: 1.5px solid var(--red);
+  content: "🇦🇹";
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .btn-primary { background: var(--red); border-color: var(--red); }
